@@ -9,6 +9,6 @@ setup(
     author_email='bloyola@itglue.com',
     license='MIT',
     packages=['itglue'],
-    install_requires=['requests'] #,
-    # zip_safe=False
+    install_requires=['requests'],
+    zip_safe=False
 )

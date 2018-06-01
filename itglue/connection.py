@@ -62,7 +62,6 @@ class Connection:
         if not self.api_key:
             raise self.RequestError('API key not defined')
         url_formatted_params = self._format_params(params) if params else None
-        print(url, url_formatted_params, data, self.default_headers)
         response = request_func(url, headers=self.default_headers, data=data, params=url_formatted_params)
         if response.status_code not in range(200, 299):
             message = 'Request failed with response code {} and body {}'.format(response.status_code, response.content)

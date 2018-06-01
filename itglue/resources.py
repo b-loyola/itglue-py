@@ -1,5 +1,6 @@
 from . import connection
 from . import process_path
+import re
 
 __all__ = [
     "Organization",
@@ -87,7 +88,6 @@ class ResourceBase(object):
         """
         if self.id:
             raise self.ResourceError('cannot create a resource with an existing ID')
-        print('in resource', connection)
         data = self.__class__._process_request(
             connection.post,
             parent=parent,
@@ -272,7 +272,8 @@ class ResourceBase(object):
             raise cls.ResourceError(
                 "Unable to load data. Expected keys 'type', 'id' and 'attributes', got: {}".format(data_keys)
             )
-        if not data['type'] == cls.resource_type():
+        data_type = re.sub('-', '_', str(data['type']))
+        if not data_type == cls.resource_type():
             raise cls.ResourceMismatchError(
                 "Received data type '{}' but expected '{}'".format(data['type'], cls.resource_type())
             )
