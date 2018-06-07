@@ -8,7 +8,10 @@ __all__ = [
     "ConfigurationType",
     "ConfigurationStatus",
     "ConfigurationInterface",
-    "Location"
+    "Location",
+    "FlexibleAsset",
+    "FlexibleAssetField",
+    "FlexibleAssetType"
 ]
 
 
@@ -315,3 +318,21 @@ class Location(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'locations'
+
+
+class FlexibleAsset(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'flexible_assets'
+
+
+class FlexibleAssetType(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'flexible_asset_types'
+
+
+class FlexibleAssetField(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'flexible_asset_fields'
