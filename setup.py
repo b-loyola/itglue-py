@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='itglue',
-    version='0.1.1',
+    version='0.1.2',
     description='A simple wrapper for the IT Glue API',
     url='http://github.com/bloyola/itglue-py',
     author='Ben Loyola',

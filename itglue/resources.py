@@ -8,7 +8,8 @@ __all__ = [
     "ConfigurationType",
     "ConfigurationStatus",
     "ConfigurationInterface",
-    "Location"
+    "Location",
+    "FlexibleAsset"
 ]
 
 class ResourceBase(object):
