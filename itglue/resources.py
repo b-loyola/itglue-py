@@ -309,4 +309,9 @@ class Location(ResourceBase):
     def resource_type(cls):
         return 'locations'
 
+class FlexibleAsset(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'flexible_assets'
+
 
