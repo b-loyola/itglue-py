@@ -2,6 +2,7 @@ import requests
 import json
 import os
 
+
 class Connection:
     class RequestError(Exception):
         pass
@@ -57,7 +58,6 @@ class Connection:
             links = next_parsed_resp.get('links', {})
         return data
 
-
     def _process_request(self, request_func, url, data=None, params=None):
         if not self.api_key:
             raise self.RequestError('API key not defined')
@@ -97,6 +97,7 @@ class Connection:
 
     @staticmethod
     def data_wrap(payload):
-        return { 'data': payload }
+        return {'data': payload}
+
 
 connection = Connection()
