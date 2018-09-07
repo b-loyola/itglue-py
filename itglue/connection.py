@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import re
 
 
 class Connection:
@@ -46,6 +47,7 @@ class Connection:
         parsed_response = response.json()
         data = parsed_response['data']
         if type(data) is not list:
+            self.modify_payload_response(data['attributes'])
             return data
         meta = parsed_response.get('meta', {})
         links = parsed_response.get('links', {})
@@ -56,6 +58,8 @@ class Connection:
             data.extend(next_parsed_resp['data'])
             meta = next_parsed_resp.get('meta', {})
             links = next_parsed_resp.get('links', {})
+        for data_item in data:
+            self.modify_payload_response(data_item['attributes'])
         return data
 
     def _process_request(self, request_func, url, data=None, params=None):
@@ -94,6 +98,14 @@ class Connection:
                 for rel_name, rel_items in relationships.items():
                     payload['relationships'][rel_name] = self.data_wrap(rel_items)
             return json.dumps(self.data_wrap(payload))
+
+    @staticmethod
+    def modify_payload_response(data):
+        data_keys = sorted(data.keys())
+        for key in data_keys:
+            new_key = re.sub('-', '_', key)
+            data[new_key] = data.pop(key)
+        return data
 
     @staticmethod
     def data_wrap(payload):
