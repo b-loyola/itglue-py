@@ -8,8 +8,12 @@ __all__ = [
     "ConfigurationType",
     "ConfigurationStatus",
     "ConfigurationInterface",
-    "Location"
+    "Location",
+    "FlexibleAsset",
+    "FlexibleAssetField",
+    "FlexibleAssetType"
 ]
+
 
 class ResourceBase(object):
     class ResourceError(Exception):
@@ -125,7 +129,7 @@ class ResourceBase(object):
         Renders the resource payload.
         :returns: a dict representing the object to be used as payload for a request
         """
-        payload = {'type': self.resource_type(), 'attributes': self.attributes }
+        payload = {'type': self.resource_type(), 'attributes': self.attributes}
         if self.id:
             payload['id'] = self.id
         return payload
@@ -233,7 +237,7 @@ class ResourceBase(object):
         all_nones = not all(filters.values())
         if not filters or all_nones:
             raise cls.ResourceError('at least one valid filter must be provided')
-        params = { 'filter': filters }
+        params = {'filter': filters}
         return cls._process_request(connection.get, parent=parent, params=params)
 
     @classmethod
@@ -279,30 +283,36 @@ class ResourceBase(object):
             )
         return True
 
+
 class Organization(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'organizations'
+
 
 class Configuration(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'configurations'
 
+
 class ConfigurationType(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'configuration_types'
+
 
 class ConfigurationStatus(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'configuration_statuses'
 
+
 class ConfigurationInterface(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'configuration_interfaces'
+
 
 class Location(ResourceBase):
     @classmethod
@@ -310,3 +320,19 @@ class Location(ResourceBase):
         return 'locations'
 
 
+class FlexibleAsset(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'flexible_assets'
+
+
+class FlexibleAssetType(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'flexible_asset_types'
+
+
+class FlexibleAssetField(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'flexible_asset_fields'

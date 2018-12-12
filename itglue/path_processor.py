@@ -1,5 +1,6 @@
 import re
 
+
 class PathProcessor:
     def __init__(self, resource_type, parent_type=None, parent_id=None, id=None):
         self.resource_type = resource_type

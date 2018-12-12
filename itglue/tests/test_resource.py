@@ -1,7 +1,8 @@
 import unittest
-from unittest.mock import patch, MagicMock, create_autospec
+from unittest.mock import patch, MagicMock
 
 import itglue
+
 
 class TestData(object):
     resource_type = 'configurations'
@@ -29,6 +30,7 @@ class TestData(object):
         id=resource_id,
         name=resource_alt_name
     )
+
 
 class TestResource(unittest.TestCase):
     """Basic test cases."""
@@ -217,7 +219,6 @@ class TestResource(unittest.TestCase):
         with self.assertRaises(itglue.Configuration.ResourceError):
             self.resource.update(parent=self.parent_resource)
 
-
     def test_reload(self):
         self.assertEqual(self.resource._reload(TestData.data_dict), self.resource)
         self.assertEqual(self.resource.id, TestData.resource_id)
@@ -275,7 +276,7 @@ class TestResource(unittest.TestCase):
     def test_filter(self):
         with patch.object(itglue.resources.connection, 'get', return_value=TestData.data_list):
             expected_path = '/{}'.format(TestData.resource_type)
-            expected_params = { 'filter': { 'name': TestData.resource_name } }
+            expected_params = {'filter': {'name': TestData.resource_name}}
             resources = self.resource_class.filter(name=TestData.resource_name)
             self.assertEqual(resources, [TestData.resource_from_data])
             self.mock_connection.get.assert_called_once_with(expected_path, params=expected_params)
@@ -311,7 +312,7 @@ class TestResource(unittest.TestCase):
     def test_first_or_create_with_match(self):
         with patch.object(itglue.resources.connection, 'get', return_value=TestData.data_list):
             expected_path = '/{}'.format(TestData.resource_type)
-            expected_params = { 'filter': { 'name': TestData.resource_name } }
+            expected_params = {'filter': {'name': TestData.resource_name}}
             resource = self.resource_class.first_or_create(name=TestData.resource_name)
             self.assertEqual(resource, TestData.resource_from_data)
             self.mock_connection.get.assert_called_once_with(expected_path, params=expected_params)
@@ -321,7 +322,7 @@ class TestResource(unittest.TestCase):
         with patch.object(itglue.resources.connection, 'get', return_value=[]), \
                 patch.object(itglue.resources.connection, 'post', return_value=TestData.data_dict):
             expected_path = '/{}'.format(TestData.resource_type)
-            expected_params = { 'filter': { 'name': TestData.resource_name } }
+            expected_params = {'filter': {'name': TestData.resource_name}}
             expected_payload = {
                 'type': TestData.resource_type,
                 'attributes': {
@@ -336,7 +337,7 @@ class TestResource(unittest.TestCase):
     def test_first_or_initialize_with_match(self):
         with patch.object(itglue.resources.connection, 'get', return_value=TestData.data_list):
             expected_path = '/{}'.format(TestData.resource_type)
-            expected_params = { 'filter': { 'name': TestData.resource_name } }
+            expected_params = {'filter': {'name': TestData.resource_name}}
             resource = self.resource_class.first_or_initialize(name=TestData.resource_name)
             self.assertEqual(resource, TestData.resource_from_data)
             self.mock_connection.get.assert_called_once_with(expected_path, params=expected_params)
@@ -345,7 +346,7 @@ class TestResource(unittest.TestCase):
     def test_first_or_initialize_without_match(self):
         with patch.object(itglue.resources.connection, 'get', return_value=[]):
             expected_path = '/{}'.format(TestData.resource_type)
-            expected_params = { 'filter': { 'name': TestData.resource_name } }
+            expected_params = {'filter': {'name': TestData.resource_name}}
             resource = self.resource_class.first_or_initialize(name=TestData.resource_name)
             self.assertEqual(resource, itglue.Configuration(name=TestData.resource_name))
             self.mock_connection.get.assert_called_once_with(expected_path, params=expected_params)
@@ -354,7 +355,7 @@ class TestResource(unittest.TestCase):
     def test_find_by(self):
         with patch.object(itglue.resources.connection, 'get', return_value=TestData.data_list):
             expected_path = '/{}'.format(TestData.resource_type)
-            expected_params = { 'filter': { 'name': TestData.resource_name } }
+            expected_params = {'filter': {'name': TestData.resource_name}}
             resource = self.resource_class.find_by(name=TestData.resource_name)
             self.assertEqual(resource, TestData.resource_from_data)
             self.mock_connection.get.assert_called_once_with(expected_path, params=expected_params)
@@ -362,7 +363,7 @@ class TestResource(unittest.TestCase):
     def test_find_by_no_matches(self):
         with patch.object(itglue.resources.connection, 'get', return_value=[]):
             expected_path = '/{}'.format(TestData.resource_type)
-            expected_params = { 'filter': { 'name': TestData.resource_name } }
+            expected_params = {'filter': {'name': TestData.resource_name}}
             resource = self.resource_class.find_by(name=TestData.resource_name)
             self.assertEqual(resource, None)
             self.mock_connection.get.assert_called_once_with(expected_path, params=expected_params)
@@ -374,6 +375,7 @@ class TestResource(unittest.TestCase):
     def test_find_by_all_empty_error(self):
         with self.assertRaises(itglue.Configuration.ResourceError):
             self.resource_class.find_by(name=None, notes='')
+
 
 if __name__ == '__main__':
     unittest.main()
