@@ -8,6 +8,9 @@ class Connection:
     class RequestError(Exception):
         pass
 
+    class ResponseError(Exception):
+        pass
+
     __shared_state = {}
 
     def __init__(self, api_key=None, api_url=None):
@@ -67,9 +70,8 @@ class Connection:
             raise self.RequestError('API key not defined')
         url_formatted_params = self._format_params(params) if params else None
         response = request_func(url, headers=self.default_headers, data=data, params=url_formatted_params)
-        if response.status_code not in range(200, 299):
-            message = 'Request failed with response code {} and body {}'.format(response.status_code, response.content)
-            raise self.RequestError(message)
+        if not response.ok:
+            raise self.ResponseError(response.status_code, response.text)
         return response
 
     def _format_params(self, params, namespace=None):
