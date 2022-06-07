@@ -1,5 +1,4 @@
 import re
-from collections.abc import Mapping
 
 from .utils import normalize_ids, prepare_tag_traits_for_upload
 
@@ -11,6 +10,7 @@ __all__ = [
     "ConfigurationType",
     "ConfigurationStatus",
     "ConfigurationInterface",
+    "Contact",
     "Location",
     "FlexibleAsset",
     "FlexibleAssetField",
@@ -383,6 +383,12 @@ class ConfigurationInterface(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'configuration_interfaces'
+
+
+class Contact(ResourceBase):
+    @classmethod
+    def resource_type(cls):
+        return 'contacts'
 
 
 class Location(ResourceBase):
