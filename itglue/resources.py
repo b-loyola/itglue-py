@@ -1,6 +1,9 @@
-from . import connection
-from . import process_path
 import re
+from collections.abc import Mapping
+
+from .utils import prepare_tag_traits_for_upload
+
+from . import connection, process_path
 
 __all__ = [
     "Organization",
@@ -392,6 +395,26 @@ class FlexibleAsset(ResourceBase):
     @classmethod
     def resource_type(cls):
         return 'flexible_assets'
+
+    def __init__(self, id=None, **attributes):
+        super().__init__(id, **attributes)
+        self.attributes.setdefault('traits', {})
+
+    def get_trait(self, name):
+        """Gets the specified trait, or None if it doesn't exist."""
+
+        return self.attributes['traits'].get(name)
+
+    def set_trait(self, name, value):
+        """Sets the specified trait to the specified value."""
+
+        self.attributes['traits'][name] = value
+
+    def payload(self):
+        payload = super().payload()
+        newtraits = prepare_tag_traits_for_upload(payload['attributes']['traits'])
+        payload['attributes']['traits'] = newtraits
+        return payload
 
 
 class FlexibleAssetType(ResourceBase):
