@@ -119,6 +119,19 @@ class ResourceBase(object):
         )
         return self._reload(data)
 
+    def delete(self):
+        """
+        Deletes the resource. This will trigger an API DELETE request.
+        :raises ResourceError: if the resource does not have an id (does not exist yet)
+        :returns: nothing
+        """
+        if not self.id:
+            raise self.ResourceError("cannot delete a resource without an ID")
+        self._process_request(
+            connection.delete,
+            id=self.id
+        )
+
     def _reload(self, data):
         # Loads the id and attributes properties based on a data dict
         self._assert_valid_data(data)
@@ -134,6 +147,22 @@ class ResourceBase(object):
         payload = {'type': self.resource_type(), 'attributes': self.attributes}
         if self.id:
             payload['id'] = self.id
+        return payload
+
+    def _bulk_update_payload(self):
+        # Returns a dict to be used as part of a bulk update request
+        if not self.id:
+            raise self.ResourceError("cannot update a resource without an ID")
+        payload = self.payload()
+        payload['attributes']['id'] = payload['id']
+        del payload['id']
+        return payload
+
+    def _bulk_delete_payload(self):
+        # Returns a dict to be used as part of a bulk deletion request
+        if not self.id:
+            raise self.ResourceError('cannot delete a resource without an ID')
+        payload = {'type': self.resource_type(), 'attributes': {'id': self.id}}
         return payload
 
     @staticmethod
@@ -226,6 +255,43 @@ class ResourceBase(object):
         matches = cls.filter(parent, **attributes)
         if matches:
             return matches[0]
+
+    @classmethod
+    def bulk_create(cls, resources, parent=None):
+        """
+        Creates the provided resources.
+        This will trigger an API POST request.
+        :param resources: A collection of resources to create. The resources must all be the same type.
+        :param parent: The parent resource (e.g. organization). Typically required.
+        :returns: The newly created resources.
+        """
+        payload = [resource.payload() for resource in resources]
+        data = cls._process_request(connection.post, parent=parent, payload=payload)
+        return cls._load_resources(data)
+
+    @classmethod
+    def bulk_update(cls, resources, parent=None):
+        """
+        Updates the provided resources.
+        This will trigger an API PATCH request.
+        :param resources: A collection of resources to update. The resources must all be the same type.
+        :returns: The updated resources.
+        """
+        payload = [resource._bulk_update_payload() for resource in resources]
+        data = cls._process_request(connection.patch, parent=parent, payload=payload)
+        return cls._load_resources(data)
+
+    @classmethod
+    def bulk_delete(cls, resources, parent=None):
+        """
+        Deletes the provided resources.
+        This will trigger an API DELETE request.
+        :param resources: A collection of resources to delete. The resources must all be the same type.
+        :returns: The deleted resources.
+        """
+        payload = [resource._bulk_delete_payload() for resource in resources]
+        data = cls._process_request(connection.delete, parent=parent, payload=payload)
+        return cls._load_resources(data)
 
     @classmethod
     def _process_request(cls, request_func, parent=None, id=None, **request_args):

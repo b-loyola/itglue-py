@@ -46,6 +46,12 @@ class Connection:
         response = self._process_request(requests.patch, url, data=data)
         return self._process_response(response)
 
+    def delete(self, path, payload=None):
+        data = self.process_payload(payload)
+        url = self._url_for(path)
+        response = self._process_request(requests.delete, url, data=data)
+        return self._process_response(response)
+
     def _process_response(self, response):
         parsed_response = response.json()
         data = parsed_response['data']
