@@ -1,7 +1,7 @@
 import re
 from collections.abc import Mapping
 
-from .utils import prepare_tag_traits_for_upload
+from .utils import normalize_ids, prepare_tag_traits_for_upload
 
 from . import connection, process_path
 
@@ -147,9 +147,9 @@ class ResourceBase(object):
         Renders the resource payload.
         :returns: a dict representing the object to be used as payload for a request
         """
-        payload = {'type': self.resource_type(), 'attributes': self.attributes}
+        payload = {'type': self.resource_type(), 'attributes': normalize_ids(self.attributes)}
         if self.id:
-            payload['id'] = self.id
+            payload['id'] = str(self.id)
         return payload
 
     def _bulk_update_payload(self):
@@ -165,8 +165,8 @@ class ResourceBase(object):
         # Returns a dict to be used as part of a bulk deletion request
         if not self.id:
             raise self.ResourceError('cannot delete a resource without an ID')
-        payload = {'type': self.resource_type(), 'attributes': {'id': self.id}}
-        return payload
+
+        return {'type': self.resource_type(), 'attributes': {'id': str(self.id)}}
 
     @staticmethod
     def _relationships_payload(relationships):
