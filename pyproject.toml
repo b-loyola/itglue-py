@@ -1,0 +1,22 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "itglue"
+authors = [{name = "Ben Loyola", email = "bloyola@itglue.com"}]
+maintainers = [
+    {name = "Ben Loyola", email = "bloyola@itglue.com"},
+    {name = "David Haymond", email = "david@davidhaymond.dev"},
+]
+readme = "README.md"
+requires-python = "~=3.6"
+license = {file = "LICENSE.txt"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+dependencies = [
+    "requests ~=2.22",
+]
+
+[project.urls]
+Home = "https://github.com/b-loyola/itglue-py"
