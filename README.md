@@ -16,7 +16,7 @@ pip install itglue
 
 ### Authentication
 
-For now this gem only supports API Key authentication.
+For now this package only supports API Key authentication.
 
 ### Configuration
 
@@ -67,4 +67,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/b-loyo
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The package is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
